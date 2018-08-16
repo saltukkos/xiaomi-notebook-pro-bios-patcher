@@ -1,0 +1,150 @@
+﻿<Window x:Class="BiosPatcher.Views.Patching"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BiosPatcher.Views"
+        xmlns:xceedtk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:vm="clr-namespace:BiosPatcher.ViewModels"
+        mc:Ignorable="d"
+        Title="Patching" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:PatchingViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <local:InverseBooleanToVisibilityConverter x:Key="BoolToVisInvert" />
+        <local:BooleanHidingConverter x:Key="BoolToHide" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Original image" Grid.Column="0" />
+            <TextBox Margin="5, 0, 5, 0"
+                     Grid.Column="1"
+                     Text="{Binding InputFileName, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalContentAlignment="Center"
+                     x:Name="InputFileName" />
+            <Button Content="Select" Padding="5, 0, 5, 0" Grid.Column="2" Click="SelectInputFileName" />
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Patched image" Grid.Column="0" />
+            <TextBox Margin="5, 0, 5, 0"
+                     Grid.Column="1"
+                     Text="{Binding OutputFileName, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalContentAlignment="Center"
+                     x:Name="OutputFileName" />
+            <Button Content="Select" Padding="5, 0, 5, 0" Grid.Column="2" Click="SelectOutputFileName" />
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Label Content="Fan speed:" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="0" />
+            <Label Content="Turn on threshold:" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="1" />
+            <Label Content="Turn off threshold:" HorizontalAlignment="Right" Grid.Column="0" Grid.Row="2" />
+
+            <Label Content="1" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="0" />
+            <Label Content="2" Grid.Column="2" HorizontalAlignment="Center" Grid.Row="0" />
+            <Label Content="3" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="0" />
+            <Label Content="4" Grid.Column="4" HorizontalAlignment="Center" Grid.Row="0" />
+            <Label Content="5" Grid.Column="5" HorizontalAlignment="Center" Grid.Row="0" />
+
+            <xceedtk:IntegerUpDown Grid.Row="1" Grid.Column="1" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level1On}" />
+            <xceedtk:IntegerUpDown Grid.Row="2" Grid.Column="1" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level1Off}" />
+
+            <xceedtk:IntegerUpDown Grid.Row="1" Grid.Column="2" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level2On}" />
+            <xceedtk:IntegerUpDown Grid.Row="2" Grid.Column="2" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level2Off}" />
+
+            <xceedtk:IntegerUpDown Grid.Row="1" Grid.Column="3" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level3On}" />
+            <xceedtk:IntegerUpDown Grid.Row="2" Grid.Column="3" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level3Off}" />
+
+            <xceedtk:IntegerUpDown Grid.Row="1" Grid.Column="4" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level4On}" />
+            <xceedtk:IntegerUpDown Grid.Row="2" Grid.Column="4" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level4Off}" />
+
+            <xceedtk:IntegerUpDown Grid.Row="1" Grid.Column="5" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level5On}" />
+            <xceedtk:IntegerUpDown Grid.Row="2" Grid.Column="5" Margin="3, 1, 3, 1" Minimum="0" Maximum="100"
+                                   Value="{Binding Level5Off}" />
+
+        </Grid>
+
+        <Grid Grid.Row="4" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox Grid.Column="0"
+                      Content="Custom fan speed tables offset (hex)"
+                      VerticalAlignment="Center"
+                      x:Name="CustomOffsetCheckBox" />
+            <xceedtk:IntegerUpDown Grid.Column="1"
+                                   Margin="5"
+                                   Minimum="0"
+                                   Value="{Binding CustomTablesOffset}"
+                                   FormatString="X"
+                                   Width="100"
+                                   VerticalAlignment="Center"
+                                   Visibility="{Binding IsChecked, ElementName=CustomOffsetCheckBox, Converter={StaticResource BoolToHide}}"/>
+        </Grid>
+
+        <Button Grid.Row="5"
+                Height="50"
+                Margin="5"
+                Visibility="{Binding InputCorrect, Converter={StaticResource BoolToVis}}"
+                Click="PatchClicked"
+                Content="Patch!" />
+        <Label Grid.Row="5"
+               Height="50"
+               Margin="5"
+               FontSize="18"
+               Foreground="Brown"
+               HorizontalAlignment="Center"
+               VerticalContentAlignment="Center"
+               Visibility="{Binding InputCorrect, Converter={StaticResource BoolToVisInvert}}"
+               Content="{Binding ErrorMessage, Mode=OneWay}" />
+    </Grid>
+
+</Window>
