@@ -12,7 +12,7 @@ namespace BiosPatcher.Models
         private const int DataLengthOffset = 0x18;
         private const int CheckSumOffset = 0x44;
         private const int HeaderLength = 0x100;
-        private const int ChecksumDivider = 0x40;
+        private const int ChecksumLittleByte = 0x40;
         private const int CopyrightOffset = 0x564;
 
         //Copyright 1996-1999, all rights reserved Insyde Software Corp.
@@ -149,16 +149,16 @@ namespace BiosPatcher.Models
             var dataLength = 2 * BitConverterLittleEndian.ReadInt(newImage, DataLengthOffset);
             var checksum = CheckSumCalculator.Calculate(newImage, HeaderLength, dataLength);
 
-            var modulo = checksum % ChecksumDivider;
+            var modulo = (checksum - ChecksumLittleByte) % 256;
             if (modulo != 0)
             {
                 newImage[CopyrightOffset + CopyrightString.Length - 2] = 0;
                 newImage[CopyrightOffset + CopyrightString.Length - 1] =
-                    (byte) (CopyrightString[CopyrightString.Length - 2] + ChecksumDivider - modulo);
+                    unchecked ((byte) (CopyrightString[CopyrightString.Length - 2] - modulo));
             }
 
             var correctedChecksum = CheckSumCalculator.Calculate(newImage, HeaderLength, dataLength);
-            if (correctedChecksum % ChecksumDivider != 0)
+            if (correctedChecksum % 256 != ChecksumLittleByte)
             {
                 return "Internal error";
             }
@@ -202,7 +202,7 @@ namespace BiosPatcher.Models
             var actualChecksum = CheckSumCalculator.Calculate(_image, HeaderLength, dataLength);
             var writtenChecksum = BitConverterLittleEndian.ReadInt(_image, CheckSumOffset);
 
-            if (actualChecksum != writtenChecksum || actualChecksum % ChecksumDivider != 0)
+            if (actualChecksum != writtenChecksum || actualChecksum % 256 != ChecksumLittleByte)
             {
                 LastError = FileSignatureDiffersFromSupportedBios;
                 return false;
