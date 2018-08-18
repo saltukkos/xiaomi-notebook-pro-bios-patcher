@@ -7,7 +7,9 @@
         xmlns:xceedtk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:vm="clr-namespace:BiosPatcher.ViewModels"
         mc:Ignorable="d"
-        Title="Patching" Height="450" Width="800">
+        Title="Patching"
+        Height="500" Width="800"
+        MinHeight="450" MinWidth="530">
     <Window.DataContext>
         <vm:PatchingViewModel />
     </Window.DataContext>
@@ -119,15 +121,66 @@
             <CheckBox Grid.Column="0"
                       Content="Custom fan speed tables offset (decimal)"
                       VerticalAlignment="Center"
-                      x:Name="CustomOffsetCheckBox" 
-                      Unchecked="OffsetUnchecked"/>
+                      x:Name="CustomOffsetCheckBox"
+                      Unchecked="OffsetUnchecked" />
             <xceedtk:IntegerUpDown Grid.Column="1"
                                    Margin="5"
                                    Minimum="0"
                                    Value="{Binding CustomTablesOffset}"
                                    Width="100"
                                    VerticalAlignment="Center"
-                                   Visibility="{Binding IsChecked, ElementName=CustomOffsetCheckBox, Converter={StaticResource BoolToHide}}"/>
+                                   Visibility="{Binding IsChecked, ElementName=CustomOffsetCheckBox, Converter={StaticResource BoolToHide}}" />
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <local:TemperatureGraph Grid.Row="0" Grid.Column="0" Margin="5"
+                                    FromTemperature="30"
+                                    ToTemperature="100"
+                                    Description="Changed activate T,°C:"
+                                    Level1="{Binding Level1On}"
+                                    Level2="{Binding Level2On}"
+                                    Level3="{Binding Level3On}"
+                                    Level4="{Binding Level4On}"
+                                    Level5="{Binding Level5On}" />
+
+            <local:TemperatureGraph Grid.Row="0" Grid.Column="1" Margin="5"
+                                    FromTemperature="30"
+                                    ToTemperature="100"
+                                    Description="Changed deactivate T,°C:"
+                                    Level1="{Binding Level1Off}"
+                                    Level2="{Binding Level2Off}"
+                                    Level3="{Binding Level3Off}"
+                                    Level4="{Binding Level4Off}"
+                                    Level5="{Binding Level5Off}" />
+
+            <local:TemperatureGraph Grid.Row="1" Grid.Column="0" Margin="5"
+                                    FromTemperature="30"
+                                    ToTemperature="100"
+                                    Description="Default activate T,°C:"
+                                    Level1="{Binding Level1On, Mode=OneTime}"
+                                    Level2="{Binding Level2On, Mode=OneTime}"
+                                    Level3="{Binding Level3On, Mode=OneTime}"
+                                    Level4="{Binding Level4On, Mode=OneTime}"
+                                    Level5="{Binding Level5On, Mode=OneTime}" />
+
+            <local:TemperatureGraph Grid.Row="1" Grid.Column="1" Margin="5"
+                                    FromTemperature="30"
+                                    ToTemperature="100"
+                                    Description="Default deactivate T,°C:"
+                                    Level1="{Binding Level1Off, Mode=OneTime}"
+                                    Level2="{Binding Level2Off, Mode=OneTime}"
+                                    Level3="{Binding Level3Off, Mode=OneTime}"
+                                    Level4="{Binding Level4Off, Mode=OneTime}"
+                                    Level5="{Binding Level5Off, Mode=OneTime}" />
         </Grid>
 
         <Button Grid.Row="5"
