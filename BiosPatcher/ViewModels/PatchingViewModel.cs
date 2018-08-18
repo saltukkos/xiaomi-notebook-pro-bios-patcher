@@ -179,6 +179,12 @@ namespace BiosPatcher.ViewModels
 
         #endregion
 
+        public void ResetCustomOffset()
+        {
+            _model.ResetCustomOffset();
+            OnPropertyChanged(nameof(CustomTablesOffset));
+        }
+
         public string Patch()
         {
             return _model.Patch();

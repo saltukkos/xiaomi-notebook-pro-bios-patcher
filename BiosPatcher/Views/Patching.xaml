@@ -117,14 +117,14 @@
             </Grid.ColumnDefinitions>
 
             <CheckBox Grid.Column="0"
-                      Content="Custom fan speed tables offset (hex)"
+                      Content="Custom fan speed tables offset (decimal)"
                       VerticalAlignment="Center"
-                      x:Name="CustomOffsetCheckBox" />
+                      x:Name="CustomOffsetCheckBox" 
+                      Unchecked="OffsetUnchecked"/>
             <xceedtk:IntegerUpDown Grid.Column="1"
                                    Margin="5"
                                    Minimum="0"
                                    Value="{Binding CustomTablesOffset}"
-                                   FormatString="X"
                                    Width="100"
                                    VerticalAlignment="Center"
                                    Visibility="{Binding IsChecked, ElementName=CustomOffsetCheckBox, Converter={StaticResource BoolToHide}}"/>

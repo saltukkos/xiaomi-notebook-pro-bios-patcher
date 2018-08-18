@@ -125,6 +125,13 @@ namespace BiosPatcher.Models
             return true;
         }
 
+        public void ResetCustomOffset()
+        {
+            _currentFirstTableOffset = FirstTableOffset;
+            _currentSecondTableOffset = SecondTableOffset;
+            _inputCorrect = CheckInputCorrect();
+        }
+
         public string Patch()
         {
             if (!CheckCorrect())
