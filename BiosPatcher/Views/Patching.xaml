@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Patching"
         Height="500" Width="800"
-        MinHeight="450" MinWidth="530">
+        MinHeight="500" MinWidth="530">
     <Window.DataContext>
         <vm:PatchingViewModel />
     </Window.DataContext>

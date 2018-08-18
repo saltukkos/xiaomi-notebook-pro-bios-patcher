@@ -5,14 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="Color5" Color="#2B32B2"/>
+        <SolidColorBrush x:Key="Color4" Color="#3A51C1"/>
+        <SolidColorBrush x:Key="Color3" Color="#4A70D0"/>
+        <SolidColorBrush x:Key="Color2" Color="#5A90E0"/>
+        <SolidColorBrush x:Key="Color1" Color="#6AAFEF"/>
+        <SolidColorBrush x:Key="Color0" Color="#7ACFFF"/>
+    </UserControl.Resources>
+    <Grid MouseMove="OnMouseMove" MouseLeave="OnMouseLeave">
         <Canvas x:Name="Canvas" SizeChanged="OnCanvasResize">
-            <Rectangle x:Name="Level5Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="800" Fill="#2B32B2"/>
-            <Rectangle x:Name="Level4Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="700" Fill="#3A51C1"/>
-            <Rectangle x:Name="Level3Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="600" Fill="#4A70D0"/>
-            <Rectangle x:Name="Level2Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="500" Fill="#5A90E0"/>
-            <Rectangle x:Name="Level1Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="400" Fill="#6AAFEF"/>
-            <Rectangle x:Name="Level0Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="300" Fill="#7ACFFF"/>
+            <Rectangle x:Name="Level5Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="800" Fill="{StaticResource Color5}"/>
+            <Rectangle x:Name="Level4Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="700" Fill="{StaticResource Color4}"/>
+            <Rectangle x:Name="Level3Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="600" Fill="{StaticResource Color3}"/>
+            <Rectangle x:Name="Level2Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="500" Fill="{StaticResource Color2}"/>
+            <Rectangle x:Name="Level1Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="400" Fill="{StaticResource Color1}"/>
+            <Rectangle x:Name="Level0Graph" Height="{Binding ElementName=Canvas, Path=ActualHeight}" Width="300" Fill="{StaticResource Color0}"/>
             <Polygon x:Name="Header" Points="0,450, 0,0 800,0" Fill="White"/>
         </Canvas>
         <Label x:Name="DescriptionLabel" FontSize="13" Margin="5"/>
