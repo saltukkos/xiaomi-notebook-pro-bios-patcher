@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=2018.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.2018.2.1\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>False</Private>
@@ -68,8 +71,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\BitConverterLE.cs" />
+    <Compile Include="Models\ArrayExtensions.cs" />
+    <Compile Include="Models\BitConverterLittleEndian.cs" />
     <Compile Include="Models\CheckSumCalculator.cs" />
+    <Compile Include="Models\ControllerImage.cs" />
     <Compile Include="Models\DefaultValues.cs" />
     <Compile Include="Models\PatchingModel.cs" />
     <Compile Include="ViewModels\PatchingViewModel.cs" />
