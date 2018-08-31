@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using BiosPatcher.ViewModel;
+using JetBrains.Annotations;
 using Microsoft.Win32;
 
 namespace BiosPatcher.View
@@ -7,10 +8,16 @@ namespace BiosPatcher.View
     /// <summary>
     /// Interaction logic for Patching.xaml
     /// </summary>
-    public partial class Patching
+    //[Component]
+    public partial class PatchingWindow
     {
-        public Patching()
+        [NotNull]
+        private readonly IPatchingViewModel _viewModel;
+
+        public PatchingWindow([NotNull] IPatchingViewModel viewModel)
         {
+            _viewModel = viewModel;
+            DataContext = viewModel;
             InitializeComponent();
         }
 
@@ -34,7 +41,7 @@ namespace BiosPatcher.View
 
         private void PatchClicked(object sender, RoutedEventArgs e)
         {
-            var result = ((PatchingViewModel)DataContext).Patch();
+            var result = _viewModel.Patch();
             MessageBox.Show(result);
         }
     }

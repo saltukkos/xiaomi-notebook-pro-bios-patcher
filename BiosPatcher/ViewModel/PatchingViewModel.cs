@@ -6,10 +6,11 @@ using JetBrains.Annotations;
 
 namespace BiosPatcher.ViewModel
 {
-    public sealed class PatchingViewModel : INotifyPropertyChanged
+    [Component]
+    internal sealed class PatchingViewModel : IPatchingViewModel
     {
         [NotNull]
-        private readonly PatchingModel _model;
+        private readonly IPatchingModel _model;
 
         [NotNull]
         private string _inputFileName = string.Empty;
@@ -19,9 +20,9 @@ namespace BiosPatcher.ViewModel
 
         private bool _isAutoSettingOut = true;
 
-        public PatchingViewModel()
+        public PatchingViewModel([NotNull] IPatchingModel model)
         {
-            _model = new PatchingModel();
+            _model = model;
         }
 
         [NotNull]
@@ -63,16 +64,6 @@ namespace BiosPatcher.ViewModel
         public string ErrorMessage
         {
             get { return _model.CurrentStateDescription; }
-        }
-
-        public int CustomTablesOffset
-        {
-            get { return _model.CustomOffset; }
-            set
-            {
-                _model.CustomOffset = value;
-                OnPropertyChanged();
-            }
         }
 
         #region LevelsData

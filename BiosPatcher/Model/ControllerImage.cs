@@ -6,10 +6,17 @@ using JetBrains.Annotations;
 
 namespace BiosPatcher.Model
 {
-    internal sealed class ControllerImage
+    [Component]
+    internal sealed class ControllerImage : IControllerImage
     {
         [NotNull]
         private readonly byte[] _image;
+
+        [NotNull]
+        private readonly IBitConverterLittleEndian _bitConverter;
+
+        [NotNull]
+        private readonly ICheckSumCalculator _checkSumCalculator;
 
         static ControllerImage()
         {
@@ -17,9 +24,15 @@ namespace BiosPatcher.Model
         }
 
         // ReSharper disable once NotNullMemberIsNotInitialized -- incorrect inspection
-        public ControllerImage([NotNull] IEnumerable<byte> data)
+        public ControllerImage(
+            [NotNull] IEnumerable<byte> data,
+            [NotNull] IBitConverterLittleEndian bitConverter,
+            [NotNull] ICheckSumCalculator checkSumCalculator)
         {
+            _bitConverter = bitConverter;
+            _checkSumCalculator = checkSumCalculator;
             _image = data.ToArray();
+
             CheckSignatures();
             DetectFanTables();
         }
@@ -39,14 +52,14 @@ namespace BiosPatcher.Model
                 throw new IncorrectSignatureException("Header is not present");
             }
 
-            var dataLength = 2 * BitConverterLittleEndian.ReadInt(_image, ImageMarkup.DataLengthOffset);
+            var dataLength = 2 * _bitConverter.ReadInt(_image, ImageMarkup.DataLengthOffset);
             if (_image.Length < dataLength + ImageMarkup.HeaderLength)
             {
                 throw new IncorrectSignatureException("Data length is bigger than file size");
             }
 
-            Checksum = BitConverterLittleEndian.ReadInt(_image, ImageMarkup.CheckSumOffset);
-            var actualChecksum = CheckSumCalculator.Calculate(_image, ImageMarkup.HeaderLength, dataLength);
+            Checksum = _bitConverter.ReadInt(_image, ImageMarkup.CheckSumOffset);
+            var actualChecksum = _checkSumCalculator.Calculate(_image, ImageMarkup.HeaderLength, dataLength);
 
             if (actualChecksum != Checksum || actualChecksum % 256 != ImageMarkup.ChecksumLittleByte)
             {

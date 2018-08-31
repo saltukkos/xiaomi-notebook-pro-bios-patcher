@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BiosPatcher.Model.Exceptions;
@@ -6,32 +7,42 @@ using JetBrains.Annotations;
 
 namespace BiosPatcher.Model
 {
-    public sealed class PatchingModel
+    [Component]
+    internal sealed class PatchingModel : IPatchingModel
     {
+        [NotNull]
+        private readonly IBitConverterLittleEndian _bitConverter;
+
+        [NotNull]
+        private readonly Func<IEnumerable<byte>, IControllerImage> _controllerImageCreator;
+
         [CanBeNull]
         private string _outFileName;
 
         [CanBeNull]
-        private ControllerImage _image;
+        private IControllerImage _image;
 
         [NotNull]
-        public int[] OffLevels { get; } = new int[5];
+        public int[] OffLevels { get; }
 
         [NotNull]
-        public int[] OnLevels { get; } = new int[5];
+        public int[] OnLevels { get; }
 
         [NotNull]
         public string CurrentStateDescription { get; private set; } = string.Empty;
 
-        public PatchingModel()
+        public PatchingModel(
+            [NotNull] IBitConverterLittleEndian bitConverter,
+            [NotNull] Func<IEnumerable<byte>, IControllerImage> controllerImageCreator,
+            [NotNull] IDefaultValuesProvider defaultValuesProvider)
         {
-            Array.Copy(DefaultValues.OffLevels, OffLevels, 5);
-            Array.Copy(DefaultValues.OnLevels, OnLevels, 5);
+            _bitConverter = bitConverter;
+            _controllerImageCreator = controllerImageCreator;
+            OffLevels = defaultValuesProvider.OffLevels.Select(i => (int)i).ToArray();
+            OnLevels = defaultValuesProvider.OnLevels.Select(i => (int)i).ToArray();
         }
 
-        public int CustomOffset { get; set; }
-
-        public void SetInputFilePath([NotNull] string filename)
+        public void SetInputFilePath(string filename)
         {
             _image = null;
             if (!File.Exists(filename))
@@ -43,7 +54,7 @@ namespace BiosPatcher.Model
             try
             {
                 var data = File.ReadAllBytes(filename);
-                _image = new ControllerImage(data);
+                _image = _controllerImageCreator(data);
                 CurrentStateDescription = string.Empty;
             }
             catch (IncorrectSignatureException e)
@@ -60,7 +71,7 @@ namespace BiosPatcher.Model
             }
         }
 
-        public void SetOutputFilePath([NotNull] string filename)
+        public void SetOutputFilePath(string filename)
         {
             _outFileName = filename;
         }
@@ -71,7 +82,7 @@ namespace BiosPatcher.Model
         }
 
         [ContractAnnotation("image:null=>false")]
-        private bool CheckCorrectInternal([CanBeNull] ControllerImage image)
+        private bool CheckCorrectInternal([CanBeNull] IControllerImage image)
         {
             if (image == null)
             {
@@ -140,11 +151,11 @@ namespace BiosPatcher.Model
             newImage[alignmentOffset + 1] = modulo;
             diff += modulo;
 
-            BitConverterLittleEndian.WriteInt(_image.Checksum + diff, newImage, ImageMarkup.CheckSumOffset);
+            _bitConverter.WriteInt(_image.Checksum + diff, newImage, ImageMarkup.CheckSumOffset);
 
             try
             {
-                var unused = new ControllerImage(newImage);
+                var unused = _controllerImageCreator(newImage);
             }
             catch
             {

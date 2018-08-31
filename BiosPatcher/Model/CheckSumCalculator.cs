@@ -1,10 +1,9 @@
-﻿using JetBrains.Annotations;
-
-namespace BiosPatcher.Model
+﻿namespace BiosPatcher.Model
 {
-    public static class CheckSumCalculator
+    [Component]
+    internal sealed class CheckSumCalculator : ICheckSumCalculator
     {
-        public static int Calculate([NotNull] byte[] data, int from, int length)
+        public int Calculate(byte[] data, int from, int length)
         {
             var result = 0;
             for (var i = from; i < length + from; ++i)

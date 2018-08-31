@@ -71,19 +71,26 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ComponentAttribute.cs" />
+    <Compile Include="Model\IBitConverterLittleEndian.cs" />
+    <Compile Include="Model\ICheckSumCalculator.cs" />
+    <Compile Include="Model\IControllerImage.cs" />
+    <Compile Include="Model\IDefaultValuesProvider.cs" />
+    <Compile Include="Model\IPatchingModel.cs" />
     <Compile Include="Model\ListExtensions.cs" />
     <Compile Include="Model\BitConverterLittleEndian.cs" />
     <Compile Include="Model\CheckSumCalculator.cs" />
     <Compile Include="Model\ControllerImage.cs" />
-    <Compile Include="Model\DefaultValues.cs" />
+    <Compile Include="Model\DefaultValuesProvider.cs" />
     <Compile Include="Model\Exceptions\IncorrectSignatureException.cs" />
     <Compile Include="Model\Exceptions\TemperatureTablesException.cs" />
     <Compile Include="Model\ImageMarkup.cs" />
     <Compile Include="Model\PatchingModel.cs" />
+    <Compile Include="ViewModel\IPatchingViewModel.cs" />
     <Compile Include="ViewModel\PatchingViewModel.cs" />
     <Compile Include="View\InverseBooleanToVisibilityConverter.cs" />
-    <Compile Include="View\Patching.xaml.cs">
-      <DependentUpon>Patching.xaml</DependentUpon>
+    <Compile Include="View\PatchingWindow.xaml.cs">
+      <DependentUpon>PatchingWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TemperatureGraph.xaml.cs">
       <DependentUpon>TemperatureGraph.xaml</DependentUpon>
@@ -99,7 +106,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\Patching.xaml">
+    <Page Include="View\PatchingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,18 +1,14 @@
-﻿<Window x:Class="BiosPatcher.View.Patching"
+﻿<Window x:Class="BiosPatcher.View.PatchingWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xceedtk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:viewModel="clr-namespace:BiosPatcher.ViewModel"
         xmlns:view="clr-namespace:BiosPatcher.View"
         mc:Ignorable="d"
         Title="Xiaomi Notebook Pro bios patcher"
         Height="500" Width="800"
         MinHeight="500" MinWidth="530">
-    <Window.DataContext>
-        <viewModel:PatchingViewModel />
-    </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <view:InverseBooleanToVisibilityConverter x:Key="BoolToVisInvert" />
