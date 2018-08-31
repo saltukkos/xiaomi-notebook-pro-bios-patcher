@@ -162,7 +162,7 @@ namespace BiosPatcher.Views
             var graphs = new[] {Level0Graph, Level1Graph, Level2Graph, Level3Graph, Level4Graph, Level5Graph};
             var levels = new[] {Level1, Level2, Level3, Level4, Level5};
             var levelUnderCursor = 5;
-            for (int i = 0; i < levels.Length; ++i)
+            for (var i = 0; i < levels.Length; ++i)
             {
                 if (GetWidthForTemperature(levels[i]) > position.X)
                 {

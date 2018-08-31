@@ -7,7 +7,7 @@
         xmlns:xceedtk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:vm="clr-namespace:BiosPatcher.ViewModels"
         mc:Ignorable="d"
-        Title="Patching"
+        Title="Xiaomi Notebook Pro bios patcher"
         Height="500" Width="800"
         MinHeight="500" MinWidth="530">
     <Window.DataContext>
@@ -16,7 +16,6 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <local:InverseBooleanToVisibilityConverter x:Key="BoolToVisInvert" />
-        <local:BooleanHidingConverter x:Key="BoolToHide" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -111,26 +110,6 @@
 
         </Grid>
 
-        <Grid Grid.Row="4" Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <CheckBox Grid.Column="0"
-                      Content="Custom fan speed tables offset (decimal)"
-                      VerticalAlignment="Center"
-                      x:Name="CustomOffsetCheckBox"
-                      Unchecked="OffsetUnchecked" />
-            <xceedtk:IntegerUpDown Grid.Column="1"
-                                   Margin="5"
-                                   Minimum="0"
-                                   Value="{Binding CustomTablesOffset}"
-                                   Width="100"
-                                   VerticalAlignment="Center"
-                                   Visibility="{Binding IsChecked, ElementName=CustomOffsetCheckBox, Converter={StaticResource BoolToHide}}" />
-        </Grid>
         <Grid Grid.Row="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />

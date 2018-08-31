@@ -62,7 +62,7 @@ namespace BiosPatcher.ViewModels
         [NotNull]
         public string ErrorMessage
         {
-            get { return _model.LastError; }
+            get { return _model.CurrentStateDescription; }
         }
 
         public int CustomTablesOffset
@@ -178,12 +178,6 @@ namespace BiosPatcher.ViewModels
         }
 
         #endregion
-
-        public void ResetCustomOffset()
-        {
-            _model.ResetCustomOffset();
-            OnPropertyChanged(nameof(CustomTablesOffset));
-        }
 
         public string Patch()
         {

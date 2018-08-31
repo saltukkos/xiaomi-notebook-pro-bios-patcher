@@ -37,10 +37,5 @@ namespace BiosPatcher.Views
             var result = ((PatchingViewModel)DataContext).Patch();
             MessageBox.Show(result);
         }
-
-        private void OffsetUnchecked(object sender, RoutedEventArgs e)
-        {
-            ((PatchingViewModel)DataContext).ResetCustomOffset();
-        }
     }
 }

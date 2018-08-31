@@ -1,47 +1,18 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using BiosPatcher.Models.Exceptions;
 using JetBrains.Annotations;
 
 namespace BiosPatcher.Models
 {
     public sealed class PatchingModel
     {
-        private const int FirstTableOffset = 0x155AF;
-        private const int SecondTableOffset = 0x155C7;
-        private const int DataLengthOffset = 0x18;
-        private const int CheckSumOffset = 0x44;
-        private const int HeaderLength = 0x100;
-        private const int ChecksumLittleByte = 0x40;
-        private const int CopyrightOffset = 0x564;
-
-        //Copyright 1996-1999, all rights reserved Insyde Software Corp.
-        private static readonly byte[] CopyrightString =
-        {
-            0x43, 0x6F, 0x70, 0x79, 0x72, 0x69, 0x67, 0x68, 0x74, 0x20, 0x31, 0x39,
-            0x39, 0x36, 0x2D, 0x31, 0x39, 0x39, 0x39, 0x2C, 0x20, 0x61, 0x6C, 0x6C,
-            0x20, 0x72, 0x69, 0x67, 0x68, 0x74, 0x73, 0x20, 0x72, 0x65, 0x73, 0x65,
-            0x72, 0x76, 0x65, 0x64, 0x0A, 0x0D, 0x49, 0x6E, 0x73, 0x79, 0x64, 0x65,
-            0x20, 0x53, 0x6F, 0x66, 0x74, 0x77, 0x61, 0x72, 0x65, 0x20, 0x43, 0x6F,
-            0x72, 0x70, 0x2E, 0x00
-        };
-
-        static PatchingModel()
-        {
-            Debug.Assert(SecondTableOffset > FirstTableOffset);
-            Debug.Assert(FirstTableOffset > HeaderLength);
-            Debug.Assert(CheckSumOffset + 4 < HeaderLength);
-            Debug.Assert(DataLengthOffset + 4 < HeaderLength);
-        }
-
-        [NotNull]
-        private const string FileSignatureDiffersFromSupportedBios = "File signature differs from supported bios";
-
-        [CanBeNull]
-        private byte[] _image;
-
         [CanBeNull]
         private string _outFileName;
+
+        [CanBeNull]
+        private ControllerImage _image;
 
         [NotNull]
         public int[] OffLevels { get; } = new int[5];
@@ -50,39 +21,43 @@ namespace BiosPatcher.Models
         public int[] OnLevels { get; } = new int[5];
 
         [NotNull]
-        public string LastError { get; private set; } = string.Empty;
-
-        private int _currentFirstTableOffset = FirstTableOffset;
-        private int _currentSecondTableOffset = SecondTableOffset;
-        private bool _inputCorrect;
+        public string CurrentStateDescription { get; private set; } = string.Empty;
 
         public PatchingModel()
         {
             Array.Copy(DefaultValues.OffLevels, OffLevels, 5);
             Array.Copy(DefaultValues.OnLevels, OnLevels, 5);
-            CheckInputCorrect();
         }
 
-        public int CustomOffset
-        {
-            get { return _currentFirstTableOffset; }
-            set
-            {
-                _currentFirstTableOffset = value;
-                _currentSecondTableOffset = value + (SecondTableOffset - FirstTableOffset);
-                _inputCorrect = CheckInputCorrect();
-            }
-        }
+        public int CustomOffset { get; set; }
 
         public void SetInputFilePath([NotNull] string filename)
         {
             _image = null;
-            if (File.Exists(filename))
+            if (!File.Exists(filename))
             {
-                _image = File.ReadAllBytes(filename);
+                CurrentStateDescription = "Input file is not exist";
+                return;
             }
 
-            _inputCorrect = CheckInputCorrect();
+            try
+            {
+                var data = File.ReadAllBytes(filename);
+                _image = new ControllerImage(data);
+                CurrentStateDescription = string.Empty;
+            }
+            catch (IncorrectSignatureException e)
+            {
+                CurrentStateDescription = $"Incorrect file signature: {e.Message}";
+            }
+            catch (TemperatureTablesException e)
+            {
+                CurrentStateDescription = $"Error while parsing tables: {e.Message}";
+            }
+            catch (Exception)
+            {
+                CurrentStateDescription = "Unable to read input file";
+            }
         }
 
         public void SetOutputFilePath([NotNull] string filename)
@@ -92,89 +67,93 @@ namespace BiosPatcher.Models
 
         public bool CheckCorrect()
         {
-            if (!_inputCorrect)
+            return CheckCorrectInternal(_image);
+        }
+
+        [ContractAnnotation("image:null=>false")]
+        private bool CheckCorrectInternal([CanBeNull] ControllerImage image)
+        {
+            if (image == null)
             {
                 return false;
             }
 
             if (string.IsNullOrEmpty(_outFileName))
             {
-                LastError = "Output path is not specified";
+                CurrentStateDescription = "Output path is not specified";
                 return false;
             }
 
-            for (int i = 0; i < 5; ++i)
+            for (var i = 0; i < 5; ++i)
             {
                 if (OffLevels[i] >= OnLevels[i])
                 {
-                    LastError = $"Level {i + 1} activate threshold is not bigger than deactivate";
+                    CurrentStateDescription = $"Level {i + 1} activate threshold is not bigger than deactivate";
                     return false;
                 }
             }
 
-            for (int i = 1; i < 5; ++i)
+            for (var i = 1; i < 5; ++i)
             {
                 if (OffLevels[i] <= OnLevels[i - 1])
                 {
-                    LastError = $"Level {i} deactivate threshold is not bigger than level {i - 1} activate threshold";
+                    CurrentStateDescription =
+                        $"Level {i} deactivate threshold is not bigger than level {i - 1} activate threshold";
                     return false;
                 }
             }
 
-            LastError = string.Empty;
+            CurrentStateDescription = string.Empty;
             return true;
         }
 
-        public void ResetCustomOffset()
-        {
-            _currentFirstTableOffset = FirstTableOffset;
-            _currentSecondTableOffset = SecondTableOffset;
-            _inputCorrect = CheckInputCorrect();
-        }
-
+        [NotNull]
         public string Patch()
         {
-            if (!CheckCorrect())
+            if (!CheckCorrectInternal(_image))
             {
                 return "Invalid settings!";
             }
 
-            // ReSharper disable once PossibleNullReferenceException
-            var newImage = new byte[_image.Length];
-            Array.Copy(_image, newImage, newImage.Length);
+            var newImage = _image.Image.ToArray();
+            var diff = 0;
 
-
-            for (int i = 0; i < 10; ++i)
+            for (var i = 0; i < 10; ++i)
             {
                 var currentArray = i % 2 == 0 ? OnLevels : OffLevels;
                 var newValue = currentArray[i / 2];
 
-                newImage[_currentFirstTableOffset + i] = (byte) newValue;
-                newImage[_currentSecondTableOffset + i] = (byte) newValue;
+                foreach (var offset in _image.TableOffsets)
+                {
+                    diff += newValue - newImage[offset + i];
+                    newImage[offset + i] = checked((byte) newValue);
+                }
             }
 
-            var dataLength = 2 * BitConverterLittleEndian.ReadInt(newImage, DataLengthOffset);
-            var checksum = CheckSumCalculator.Calculate(newImage, HeaderLength, dataLength);
+            var alignmentOffset = ImageMarkup.CopyrightOffset + ImageMarkup.CopyrightString.Count - 2;
+            
+            diff -= newImage[alignmentOffset];
+            diff -= newImage[alignmentOffset + 1];
+            newImage[alignmentOffset] = 0;
 
-            var modulo = (checksum - ChecksumLittleByte) % 256;
-            if (modulo != 0)
+            var modulo = (byte)(256 - unchecked((uint) diff) % 256);
+            newImage[alignmentOffset + 1] = modulo;
+            diff += modulo;
+
+            BitConverterLittleEndian.WriteInt(_image.Checksum + diff, newImage, ImageMarkup.CheckSumOffset);
+
+            try
             {
-                newImage[CopyrightOffset + CopyrightString.Length - 2] = 0;
-                newImage[CopyrightOffset + CopyrightString.Length - 1] =
-                    unchecked ((byte) (CopyrightString[CopyrightString.Length - 2] - modulo));
+                var unused = new ControllerImage(newImage);
             }
-
-            var correctedChecksum = CheckSumCalculator.Calculate(newImage, HeaderLength, dataLength);
-            if (correctedChecksum % 256 != ChecksumLittleByte)
+            catch
             {
                 return "Internal error";
             }
 
-            BitConverterLittleEndian.WriteInt(correctedChecksum, newImage, CheckSumOffset);
-
-            // ReSharper disable once AssignNullToNotNullAttribute
             try
             {
+                // ReSharper disable once AssignNullToNotNullAttribute
                 File.WriteAllBytes(_outFileName, newImage);
             }
             catch (Exception e)
@@ -183,68 +162,6 @@ namespace BiosPatcher.Models
             }
 
             return "Image patched successfully";
-        }
-
-        private bool CheckInputCorrect()
-        {
-            if (_image is null)
-            {
-                LastError = "Can't read input file";
-                return false;
-            }
-
-            if (_image.Length < _currentSecondTableOffset + 10)
-            {
-                LastError = "File length is smaller than offset to fan speed tables";
-                return false;
-            }
-
-            var dataLength = 2 * BitConverterLittleEndian.ReadInt(_image, DataLengthOffset);
-            if (_image.Length < dataLength + HeaderLength)
-            {
-                LastError = FileSignatureDiffersFromSupportedBios;
-                return false;
-            }
-
-            var actualChecksum = CheckSumCalculator.Calculate(_image, HeaderLength, dataLength);
-            var writtenChecksum = BitConverterLittleEndian.ReadInt(_image, CheckSumOffset);
-
-            if (actualChecksum != writtenChecksum || actualChecksum % 256 != ChecksumLittleByte)
-            {
-                LastError = FileSignatureDiffersFromSupportedBios;
-                return false;
-            }
-
-            if (_image.Length < CopyrightString.Length + CopyrightOffset)
-            {
-                LastError = FileSignatureDiffersFromSupportedBios;
-                return false;
-            }
-
-            for (int i = 0; i < CopyrightString.Length; ++i)
-            {
-                if (_image[CopyrightOffset + i] != CopyrightString[i])
-                {
-                    LastError = (i == CopyrightString.Length - 2 && _image[CopyrightOffset + i] == 0) ?
-                        "Image was patched" :
-                        FileSignatureDiffersFromSupportedBios;
-                    return false;
-                }
-            }
-
-            for (int i = 0; i < 10; ++i)
-            {
-                var currentArray = i % 2 == 0 ? DefaultValues.OnLevels : DefaultValues.OffLevels;
-                var defaultValue = currentArray[i / 2];
-                if (_image[_currentFirstTableOffset + i] != defaultValue ||
-                    _image[_currentSecondTableOffset + i] != defaultValue)
-                {
-                    LastError = "Speed tables have incorrect values (image was patched or offset is incorrect)";
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }

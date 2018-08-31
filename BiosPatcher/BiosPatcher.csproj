@@ -71,14 +71,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\ArrayExtensions.cs" />
+    <Compile Include="Models\ListExtensions.cs" />
     <Compile Include="Models\BitConverterLittleEndian.cs" />
     <Compile Include="Models\CheckSumCalculator.cs" />
     <Compile Include="Models\ControllerImage.cs" />
     <Compile Include="Models\DefaultValues.cs" />
+    <Compile Include="Models\Exceptions\IncorrectSignatureException.cs" />
+    <Compile Include="Models\Exceptions\TemperatureTablesException.cs" />
+    <Compile Include="Models\ImageMarkup.cs" />
     <Compile Include="Models\PatchingModel.cs" />
     <Compile Include="ViewModels\PatchingViewModel.cs" />
-    <Compile Include="Views\BooleanHidingConverter.cs" />
     <Compile Include="Views\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Views\Patching.xaml.cs">
       <DependentUpon>Patching.xaml</DependentUpon>
