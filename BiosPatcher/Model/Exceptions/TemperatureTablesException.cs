@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace BiosPatcher.Models.Exceptions
+namespace BiosPatcher.Model.Exceptions
 {
     public class TemperatureTablesException : Exception
     {

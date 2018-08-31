@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace BiosPatcher.Models
+namespace BiosPatcher.Model
 {
     public static class DefaultValues
     {

@@ -71,21 +71,21 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\ListExtensions.cs" />
-    <Compile Include="Models\BitConverterLittleEndian.cs" />
-    <Compile Include="Models\CheckSumCalculator.cs" />
-    <Compile Include="Models\ControllerImage.cs" />
-    <Compile Include="Models\DefaultValues.cs" />
-    <Compile Include="Models\Exceptions\IncorrectSignatureException.cs" />
-    <Compile Include="Models\Exceptions\TemperatureTablesException.cs" />
-    <Compile Include="Models\ImageMarkup.cs" />
-    <Compile Include="Models\PatchingModel.cs" />
-    <Compile Include="ViewModels\PatchingViewModel.cs" />
-    <Compile Include="Views\InverseBooleanToVisibilityConverter.cs" />
-    <Compile Include="Views\Patching.xaml.cs">
+    <Compile Include="Model\ListExtensions.cs" />
+    <Compile Include="Model\BitConverterLittleEndian.cs" />
+    <Compile Include="Model\CheckSumCalculator.cs" />
+    <Compile Include="Model\ControllerImage.cs" />
+    <Compile Include="Model\DefaultValues.cs" />
+    <Compile Include="Model\Exceptions\IncorrectSignatureException.cs" />
+    <Compile Include="Model\Exceptions\TemperatureTablesException.cs" />
+    <Compile Include="Model\ImageMarkup.cs" />
+    <Compile Include="Model\PatchingModel.cs" />
+    <Compile Include="ViewModel\PatchingViewModel.cs" />
+    <Compile Include="View\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="View\Patching.xaml.cs">
       <DependentUpon>Patching.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TemperatureGraph.xaml.cs">
+    <Compile Include="View\TemperatureGraph.xaml.cs">
       <DependentUpon>TemperatureGraph.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -99,11 +99,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\Patching.xaml">
+    <Page Include="View\Patching.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TemperatureGraph.xaml">
+    <Page Include="View\TemperatureGraph.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

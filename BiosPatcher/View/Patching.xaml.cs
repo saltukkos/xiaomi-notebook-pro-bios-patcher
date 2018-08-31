@@ -1,8 +1,8 @@
 ﻿using System.Windows;
-using BiosPatcher.ViewModels;
+using BiosPatcher.ViewModel;
 using Microsoft.Win32;
 
-namespace BiosPatcher.Views
+namespace BiosPatcher.View
 {
     /// <summary>
     /// Interaction logic for Patching.xaml

@@ -1,21 +1,21 @@
-﻿<Window x:Class="BiosPatcher.Views.Patching"
+﻿<Window x:Class="BiosPatcher.View.Patching"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BiosPatcher.Views"
         xmlns:xceedtk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:vm="clr-namespace:BiosPatcher.ViewModels"
+        xmlns:viewModel="clr-namespace:BiosPatcher.ViewModel"
+        xmlns:view="clr-namespace:BiosPatcher.View"
         mc:Ignorable="d"
         Title="Xiaomi Notebook Pro bios patcher"
         Height="500" Width="800"
         MinHeight="500" MinWidth="530">
     <Window.DataContext>
-        <vm:PatchingViewModel />
+        <viewModel:PatchingViewModel />
     </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <local:InverseBooleanToVisibilityConverter x:Key="BoolToVisInvert" />
+        <view:InverseBooleanToVisibilityConverter x:Key="BoolToVisInvert" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -121,7 +121,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <local:TemperatureGraph Grid.Row="0" Grid.Column="0" Margin="5"
+            <view:TemperatureGraph Grid.Row="0" Grid.Column="0" Margin="5"
                                     FromTemperature="30"
                                     ToTemperature="100"
                                     Description="Changed activate T,°C:"
@@ -131,7 +131,7 @@
                                     Level4="{Binding Level4On}"
                                     Level5="{Binding Level5On}" />
 
-            <local:TemperatureGraph Grid.Row="0" Grid.Column="1" Margin="5"
+            <view:TemperatureGraph Grid.Row="0" Grid.Column="1" Margin="5"
                                     FromTemperature="30"
                                     ToTemperature="100"
                                     Description="Changed deactivate T,°C:"
@@ -141,7 +141,7 @@
                                     Level4="{Binding Level4Off}"
                                     Level5="{Binding Level5Off}" />
 
-            <local:TemperatureGraph Grid.Row="1" Grid.Column="0" Margin="5"
+            <view:TemperatureGraph Grid.Row="1" Grid.Column="0" Margin="5"
                                     FromTemperature="30"
                                     ToTemperature="100"
                                     Description="Default activate T,°C:"
@@ -151,7 +151,7 @@
                                     Level4="{Binding Level4On, Mode=OneTime}"
                                     Level5="{Binding Level5On, Mode=OneTime}" />
 
-            <local:TemperatureGraph Grid.Row="1" Grid.Column="1" Margin="5"
+            <view:TemperatureGraph Grid.Row="1" Grid.Column="1" Margin="5"
                                     FromTemperature="30"
                                     ToTemperature="100"
                                     Description="Default deactivate T,°C:"

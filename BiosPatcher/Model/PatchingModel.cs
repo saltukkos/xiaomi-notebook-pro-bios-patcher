@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using BiosPatcher.Models.Exceptions;
+using BiosPatcher.Model.Exceptions;
 using JetBrains.Annotations;
 
-namespace BiosPatcher.Models
+namespace BiosPatcher.Model
 {
     public sealed class PatchingModel
     {
@@ -103,7 +103,7 @@ namespace BiosPatcher.Models
                 }
             }
 
-            CurrentStateDescription = string.Empty;
+            CurrentStateDescription = "OK";
             return true;
         }
 

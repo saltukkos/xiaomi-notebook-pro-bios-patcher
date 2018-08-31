@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using BiosPatcher.Models.Exceptions;
+using BiosPatcher.Model.Exceptions;
 using JetBrains.Annotations;
 
-namespace BiosPatcher.Models
+namespace BiosPatcher.Model
 {
     internal sealed class ControllerImage
     {

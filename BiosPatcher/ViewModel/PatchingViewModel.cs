@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using BiosPatcher.Models;
+using BiosPatcher.Model;
 using JetBrains.Annotations;
 
-namespace BiosPatcher.ViewModels
+namespace BiosPatcher.ViewModel
 {
     public sealed class PatchingViewModel : INotifyPropertyChanged
     {

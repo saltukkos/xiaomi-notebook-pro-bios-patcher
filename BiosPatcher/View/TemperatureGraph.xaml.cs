@@ -4,7 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using JetBrains.Annotations;
 
-namespace BiosPatcher.Views
+namespace BiosPatcher.View
 {
     public sealed partial class TemperatureGraph
     {

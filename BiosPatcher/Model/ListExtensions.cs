@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace BiosPatcher.Models
+namespace BiosPatcher.Model
 {
     public static class ListExtensions
     {
