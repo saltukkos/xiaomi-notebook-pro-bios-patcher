@@ -1,4 +1,9 @@
 # Xiaomi notebook pro BIOS patcher
+
+## ⚠️ Project Abandoned
+
+🚨 **Important Notice**: This project is no longer maintained or supported. It does not work with the latest versions of BIOS.
+
 ### Patch EC controller image to change the fan speed curve. 
 
 ## Summary 
